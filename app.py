@@ -5,3 +5,6 @@ age = st.number_input("Enter your age:",value=None ,min_value = 18)
 sex = st.radio(
     "Select Your Sex",
     ["Male", "Female"])
+Job_field = st.selectbox(
+    "What is  your Job fiels",
+    ('Acedamic', 'IT','Realestate Business','Local business','Sales man','Manager' ))
