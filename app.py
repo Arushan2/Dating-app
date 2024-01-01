@@ -9,3 +9,6 @@ Job_field = st.selectbox(
     "What is  your Job fiels",
     ('Acedamic', 'IT','Realestate Business','Local business','Sales man','Manager','Medical' ))
 DOB = st.date_input("When's your birthday")
+user_image = st.file_uploader("Upload your image", type=["jpg", "jpeg", "png"])
+if user_image is not None:
+    st.image(user_image, caption="Uploaded Image", use_column_width=True)
