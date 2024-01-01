@@ -4,7 +4,7 @@ import json
 st.title("Mams Nivash")
 
 # Sidebar for navigation
-page = st.sidebar.selectbox("Select Page", ["Registration", "Login"])
+page = st.sidebar.selectbox("Select Page", ["Registration", "Login","Download User Datails"])
 
 if page == "Registration":
     st.header("User Registration")
@@ -55,7 +55,7 @@ if page == "Registration":
             st.success("Registration successful!")
 
 elif page == "Login":
-    st.header("Please Login As Admin")
+    st.header("User Login")
     
     # Login inputs
     login_email = st.text_input("Enter your E-Mail address")
@@ -71,7 +71,8 @@ elif page == "Login":
             st.success("Login successful!")
         else:
             st.error("Invalid login credentials. Please try again.")
-elif page == "Download User Datas":
+elif page == "Download User Datails":
+    st.header("User Login As Admin")
     login_email = st.text_input("Enter your E-Mail address of admin")
     login_password = st.text_input("Enter your password of admin", type="password")
 
