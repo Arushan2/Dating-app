@@ -1,21 +1,21 @@
 import streamlit as st
 import json
-st.title("Mams Nivash")
-name = st.text_input("Enter your name:")
-age = st.number_input("Enter your age:",value=None ,min_value = 18)
+st.title("Mams Nivash",required=True)
+name = st.text_input("Enter your name:",required=True)
+age = st.number_input("Enter your age:",value=None ,min_value = 18,required=True)
 sex = st.radio(
     "Select Your Sex",
-    ["Male", "Female"])
+    ["Male", "Female"],required=True)
 job_field = st.selectbox(
     "What is  your Job fiels",
-    ('Acedamic', 'IT','Realestate Business','Local business','Sales man','Manager','Medical' ))
+    ('Acedamic', 'IT','Realestate Business','Local business','Sales man','Manager','Medical' ),required=True)
 dob = st.date_input("When's your birthday")
 user_image = st.file_uploader("Upload your image", type=["jpg", "jpeg", "png"])
 if user_image is not None:
     st.image(user_image, caption="Uploaded Image", use_column_width=True)
-email = st.text_input("Enter your E-Mail address")
-password = st.text_input("Create your password", type="password")
-confirm_password = st.text_input("Re-enter your password", type="password")
+email = st.text_input("Enter your E-Mail address",required=True)
+password = st.text_input("Create your password", type="password",required=True)
+confirm_password = st.text_input("Re-enter your password", type="password",required=True)
 
 if (password != confirm_password):
     st.error("Passwords do not match. Please re-enter matching passwords.")
