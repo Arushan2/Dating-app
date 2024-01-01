@@ -15,7 +15,9 @@ if user_image is not None:
 Email = st.text_input("Enter your E-Mail address")
 password = st.text_input("Create your password", type="password")
 confirm_password = st.text_input("Re-enter your password", type="password")
-if password != confirm_password:
-    st.error("Passwords do not match. Please re-enter matching passwords.")
-else:
-    st.success("Passwords match!")
+while True:
+    if password != confirm_password:
+        st.error("Passwords do not match. Please re-enter matching passwords.")
+        continue
+    else:
+        st.success("Passwords match!")
