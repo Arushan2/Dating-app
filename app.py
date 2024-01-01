@@ -1,10 +1,68 @@
 import streamlit as st
+import sqlite3
 import json
+from datetime import datetime
+
+# Initialize connection to SQLite database
+conn = sqlite3.connect('userdata.db', check_same_thread=False)
+c = conn.cursor()
+
+# Create tables for user data and credentials
+def create_tables():
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS user_data (
+            name TEXT,
+            age INTEGER,
+            sex TEXT,
+            job_field TEXT,
+            dob TEXT,
+            email TEXT PRIMARY KEY,
+            image BLOB
+        )
+    ''')
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS user_credentials (
+            email TEXT PRIMARY KEY,
+            password TEXT
+        )
+    ''')
+    conn.commit()
+
+# Function to insert user data
+def insert_user_data(name, age, sex, job_field, dob, email, image):
+    c.execute('''
+        INSERT OR REPLACE INTO user_data (name, age, sex, job_field, dob, email, image)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    ''', (name, age, sex, job_field, dob, email, image))
+    conn.commit()
+
+# Function to insert user credentials
+def insert_user_credentials(email, password):
+    c.execute('''
+        INSERT OR REPLACE INTO user_credentials (email, password)
+        VALUES (?, ?)
+    ''', (email, password))
+    conn.commit()
+
+# Function to check user credentials
+def check_user_credentials(email, password):
+    c.execute('''
+        SELECT * FROM user_credentials WHERE email = ? AND password = ?
+    ''', (email, password))
+    return c.fetchone() is not None
+
+# Function to retrieve all user data (for admin)
+def get_all_user_data():
+    c.execute('SELECT * FROM user_data')
+    return c.fetchall()
 
 st.title("Mams Nivash")
 
+# Create tables
+create_tables()
+
 # Sidebar for navigation
-page = st.sidebar.selectbox("Select Page", ["Registration", "Login","Download User Datails"])
+page = st.sidebar.selectbox("Select Page", ["Registration", "Login", "Download User Details"])
 
 if page == "Registration":
     st.header("User Registration")
@@ -15,43 +73,19 @@ if page == "Registration":
     sex = st.radio("Select Your Sex", ["Male", "Female"])
     job_field = st.selectbox("What is your Job field", ('Academic', 'IT', 'Real Estate Business', 'Local Business', 'Salesman', 'Manager', 'Medical'))
     dob = st.date_input("When's your birthday")
-
-    # Upload user image
-    user_image = st.file_uploader("Upload your image", type=["jpg", "jpeg", "png"])
-
-    # Email and Password
     email = st.text_input("Enter your E-Mail address")
     password = st.text_input("Create your password", type="password")
     confirm_password = st.text_input("Re-enter your password", type="password")
+    user_image = st.file_uploader("Upload your image", type=["jpg", "jpeg", "png"])
 
-    # Check if passwords match
-    passwords_match = password == confirm_password
-
-    # Submit button for registration
+    # Check if passwords match and register user
     if st.button("Register"):
-        if not passwords_match:
+        if not (password == confirm_password):
             st.error("Passwords do not match. Please re-enter matching passwords.")
         else:
-            # Store user data in separate JSON files
-            user_data = {
-                "name": name,
-                "age": age,
-                "sex": sex,
-                "job_field": job_field,
-                "dob": str(dob),
-                "user_image": str(user_image) if user_image else None
-            }
-            email_password_data = {
-                "email": email,
-                "password": password
-            }
-
-            # Save user data to separate JSON files
-            with open("user_data.json", "w") as user_file:
-                json.dump(user_data, user_file, indent=4)
-            with open("email_password_data.json", "w") as email_password_file:
-                json.dump(email_password_data, email_password_file, indent=4)
-
+            image_data = user_image.getvalue() if user_image else None
+            insert_user_data(name, age, sex, job_field, dob, email, image_data)
+            insert_user_credentials(email, password)
             st.success("Registration successful!")
 
 elif page == "Login":
@@ -61,35 +95,28 @@ elif page == "Login":
     login_email = st.text_input("Enter your E-Mail address")
     login_password = st.text_input("Enter your password", type="password")
 
-    # Load email and password data from JSON file
-    with open("email_password_data.json", "r") as email_password_file:
-        email_password_data = json.load(email_password_file)
-
     # Check if login credentials match
     if st.button("Login"):
-        if login_email == email_password_data["email"] and login_password == email_password_data["password"]:
+        if check_user_credentials(login_email, login_password):
             st.success("Login successful!")
         else:
             st.error("Invalid login credentials. Please try again.")
-elif page == "Download User Datails":
+
+elif page == "Download User Details":
     st.header("User Login As Admin")
     login_email = st.text_input("Enter your E-Mail address of admin")
     login_password = st.text_input("Enter your password of admin", type="password")
 
-    # Load email and password data from JSON file
-    with open("email_password_data.json", "r") as email_password_file:
-        email_password_data = json.load(email_password_file)
-
-    # Check if login credentials match
     if st.button("Login"):
-        if login_email == "Rockarush2@gmail.com" and login_password == "Arush@2003":
+        if login_email == "admin@example.com" and login_password == "admin123":
             st.success("Login successful as Admin!")
+            all_user_data = get_all_user_data()
             if st.button("Download user_data.json"):
-                with open("user_data.json", "r") as user_file:
-                    user_data = json.load(user_file)
                 st.download_button(
                     label="Download user_data.json",
-                    data=json.dumps(user_data, indent=4),
+                    data=json.dumps(all_user_data, indent=4),
+                    mime="application/json",
+                    file_name="user_data.json",
                     key="user_data_download"
                 )
         else:
@@ -98,4 +125,3 @@ elif page == "Download User Datails":
 # Display the uploaded image on the registration page
 if page == "Registration" and user_image is not None:
     st.image(user_image, caption="Uploaded Image", use_column_width=True)
-
