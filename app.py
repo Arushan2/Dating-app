@@ -20,5 +20,12 @@ if (password != confirm_password):
     st.error("Passwords do not match. Please re-enter matching passwords.")
 else:
     st.success("Passwords match!")
-    st.button("Submit")
+passwords_match = password == confirm_password
+
+# Submit button
+if st.button("Submit"):
+    if not passwords_match:
+        st.error("Passwords do not match. Please re-enter matching passwords.")
+    else:
+        st.success("Form submitted successfully!")
 
