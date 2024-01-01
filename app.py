@@ -1,34 +1,37 @@
 import streamlit as st
 import json
+
 st.title("Mams Nivash")
-name = st.text_input("Enter your name:")
-age = st.number_input("Enter your age:",value=None ,min_value = 18)
-sex = st.radio(
-    "Select Your Sex",
-    ["Male", "Female"])
-job_field = st.selectbox(
-    "What is  your Job fiels",
-    ('Acedamic', 'IT','Realestate Business','Local business','Sales man','Manager','Medical' ))
-dob = st.date_input("When's your birthday")
-user_image = st.file_uploader("Upload your image", type=["jpg", "jpeg", "png"])
-if user_image is not None:
-    st.image(user_image, caption="Uploaded Image", use_column_width=True)
-email = st.text_input("Enter your E-Mail address")
-password = st.text_input("Create your password", type="password")
-confirm_password = st.text_input("Re-enter your password", type="password")
 
-if (password != confirm_password):
-    st.error("Passwords do not match. Please re-enter matching passwords.")
-else:
-    if (password!=""):
-        st.success("Passwords match!")
-passwords_match = password == confirm_password
+# Sidebar for navigation
+page = st.sidebar.selectbox("Select Page", ["Registration", "Login"])
 
-# Submit button
-if st.button("Submit"):
-    if not passwords_match:
-        st.error("Passwords do not match. Please re-enter matching passwords.")
-    else:
+if page == "Registration":
+    st.header("User Registration")
+    
+    # User information inputs
+    name = st.text_input("Enter your name:")
+    age = st.number_input("Enter your age:", value=None, min_value=18)
+    sex = st.radio("Select Your Sex", ["Male", "Female"])
+    job_field = st.selectbox("What is your Job field", ('Academic', 'IT', 'Real Estate Business', 'Local Business', 'Salesman', 'Manager', 'Medical'))
+    dob = st.date_input("When's your birthday")
+
+    # Upload user image
+    user_image = st.file_uploader("Upload your image", type=["jpg", "jpeg", "png"])
+
+    # Email and Password
+    email = st.text_input("Enter your E-Mail address")
+    password = st.text_input("Create your password", type="password")
+    confirm_password = st.text_input("Re-enter your password", type="password")
+
+    # Check if passwords match
+    passwords_match = password == confirm_password
+
+    # Submit button for registration
+    if st.button("Register"):
+        if not passwords_match:
+            st.error("Passwords do not match. Please re-enter matching passwords.")
+        else:
             # Store user data in separate JSON files
             user_data = {
                 "name": name,
@@ -49,5 +52,26 @@ if st.button("Submit"):
             with open("email_password_data.json", "w") as email_password_file:
                 json.dump(email_password_data, email_password_file, indent=4)
 
-            st.success("Form submitted successfully!")
+            st.success("Registration successful!")
 
+elif page == "Login":
+    st.header("User Login")
+    
+    # Login inputs
+    login_email = st.text_input("Enter your E-Mail address")
+    login_password = st.text_input("Enter your password", type="password")
+
+    # Load email and password data from JSON file
+    with open("email_password_data.json", "r") as email_password_file:
+        email_password_data = json.load(email_password_file)
+
+    # Check if login credentials match
+    if st.button("Login"):
+        if login_email == email_password_data["email"] and login_password == email_password_data["password"]:
+            st.success("Login successful!")
+        else:
+            st.error("Invalid login credentials. Please try again.")
+
+# Display the uploaded image on the registration page
+if page == "Registration" and user_image is not None:
+    st.image(user_image, caption="Uploaded Image", use_column_width=True)
