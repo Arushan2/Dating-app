@@ -70,7 +70,7 @@ elif page == "Login":
         if login_email == email_password_data["email"] and login_password == email_password_data["password"]:
             st.success("Login successful!")
         else:
-            st.error("Invalid login credentials. Please try again.")
+            st.error("Invalid login credentials, Please try again.")
 elif page == "Download User Datails":
     st.header("User Login As Admin")
     login_email = st.text_input("Enter your E-Mail address of admin")
