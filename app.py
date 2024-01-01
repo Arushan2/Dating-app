@@ -7,4 +7,5 @@ sex = st.radio(
     ["Male", "Female"])
 Job_field = st.selectbox(
     "What is  your Job fiels",
-    ('Acedamic', 'IT','Realestate Business','Local business','Sales man','Manager' ))
+    ('Acedamic', 'IT','Realestate Business','Local business','Sales man','Manager','Medical' ))
+DOB = st.date_input("When's your birthday")
