@@ -82,7 +82,7 @@ elif page == "Download User Datails":
 
     # Check if login credentials match
     if st.button("Login"):
-        if login_email == "Rockarush2@gmailcom" and login_password == "Arush@2003":
+        if login_email == "Rockarush2@gmail.com" and login_password == "Arush@2003":
             st.success("Login successful as Admin!")
             if st.button("Download user_data.json"):
                 with open("user_data.json", "r") as user_file:
