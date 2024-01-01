@@ -1,2 +1,2 @@
-streamlit
-json
+streamlit==1.11.0
+jason
