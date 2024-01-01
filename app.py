@@ -71,7 +71,30 @@ elif page == "Login":
             st.success("Login successful!")
         else:
             st.error("Invalid login credentials. Please try again.")
+elif page == "Download User Datas":
+    login_email = st.text_input("Enter your E-Mail address of admin")
+    login_password = st.text_input("Enter your password of admin", type="password")
+
+    # Load email and password data from JSON file
+    with open("email_password_data.json", "r") as email_password_file:
+        email_password_data = json.load(email_password_file)
+
+    # Check if login credentials match
+    if st.button("Login"):
+        if login_email == "Rockarush2@gmailcom" and login_password == "Arush@2003":
+            st.success("Login successful as Admin!")
+            if st.button("Download user_data.json"):
+                with open("user_data.json", "r") as user_file:
+                    user_data = json.load(user_file)
+                st.download_button(
+                    label="Download user_data.json",
+                    data=json.dumps(user_data, indent=4),
+                    key="user_data_download"
+                )
+        else:
+            st.error("Invalid login credentials. Please try again.")
 
 # Display the uploaded image on the registration page
 if page == "Registration" and user_image is not None:
     st.image(user_image, caption="Uploaded Image", use_column_width=True)
+
