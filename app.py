@@ -16,7 +16,7 @@ Email = st.text_input("Enter your E-Mail address")
 password = st.text_input("Create your password", type="password")
 confirm_password = st.text_input("Re-enter your password", type="password")
 while True:
-    if password != confirm_password:
+    if (password != confirm_password)&(password!=""):
         st.error("Passwords do not match. Please re-enter matching passwords.")
         continue
     else:
