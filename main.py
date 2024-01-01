@@ -66,6 +66,4 @@ def main():
             st.download_button(label="Download JSON", data=file, file_name="email_password_data.json", mime="application/json")
 
 
-if __name__ == "__main__":
-    
-    main()
+main()
