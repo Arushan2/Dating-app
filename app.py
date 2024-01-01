@@ -108,7 +108,7 @@ elif page == "Download User Details":
     login_password = st.text_input("Enter your password of admin", type="password")
 
     if st.button("Login"):
-        if login_email == "admin@example.com" and login_password == "admin123":
+        if login_email == "Rockarush2@gmail.com" and login_password == "Arush@2003":
             st.success("Login successful as Admin!")
             all_user_data = get_all_user_data()
             if st.button("Download user_data.json"):
