@@ -55,7 +55,7 @@ if page == "Registration":
             st.success("Registration successful!")
 
 elif page == "Login":
-    st.header("User Login")
+    st.header("Please Login As Admin")
     
     # Login inputs
     login_email = st.text_input("Enter your E-Mail address")
